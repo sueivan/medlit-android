@@ -43,6 +43,16 @@ for (const secret of [
 for (const step of ['apksigner verify', 'sha256sum', 'assembleRelease']) {
   assert.ok(release.includes(step), `missing release step: ${step}`);
 }
+assert.doesNotMatch(
+  release,
+  /^ {6}ANDROID_KEYSTORE_PATH:\s*\$\{\{\s*runner\.temp\s*\}\}/m,
+  'runner context is unavailable in job-level env'
+);
+assert.match(
+  release,
+  /- name: Build signed release APK\n\s+env:\n\s+ANDROID_KEYSTORE_PATH:\s*\$\{\{\s*runner\.temp\s*\}\}\/medlit-release\.jks\n\s+run: \.\/gradlew assembleRelease/,
+  'release build must receive the runner-scoped keystore path'
+);
 
 const readme = readFileSync('README.md', 'utf8');
 for (const topic of [
