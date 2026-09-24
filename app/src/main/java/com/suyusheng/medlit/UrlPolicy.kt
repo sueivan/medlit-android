@@ -1,6 +1,7 @@
 package com.suyusheng.medlit
 
 import java.net.URI
+import java.net.URISyntaxException
 
 sealed interface NavigationDecision {
     data object Internal : NavigationDecision
@@ -13,7 +14,7 @@ private const val APP_ASSETS_HOST = "appassets.androidplatform.net"
 fun decideNavigation(rawUrl: String): NavigationDecision {
     val uri = try {
         URI(rawUrl)
-    } catch (_: IllegalArgumentException) {
+    } catch (_: URISyntaxException) {
         return NavigationDecision.Rejected
     }
 
