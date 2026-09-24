@@ -37,6 +37,10 @@ assert.match(
   /ReactiveCircus\/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d/,
   'instrumentation runner must be pinned to the reviewed v2.38.0 commit'
 );
+assert.ok(
+  workflow.includes('/etc/udev/rules.d/99-kvm4all.rules'),
+  'instrumentation emulator must enable KVM acceleration on the Linux runner'
+);
 for (const setting of [
   'settings put global package_verifier_enable 0',
   'settings put global verifier_verify_adb_installs 0'
