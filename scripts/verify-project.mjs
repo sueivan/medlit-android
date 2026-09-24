@@ -37,6 +37,15 @@ assert.match(
   /ReactiveCircus\/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d/,
   'instrumentation runner must be pinned to the reviewed v2.38.0 commit'
 );
+for (const setting of [
+  'settings put global package_verifier_enable 0',
+  'settings put global verifier_verify_adb_installs 0'
+]) {
+  assert.ok(
+    workflow.includes(setting),
+    `instrumentation emulator must disable network-backed APK verification: ${setting}`
+  );
+}
 
 const release = readFileSync('.github/workflows/android-release.yml', 'utf8');
 for (const secret of [
