@@ -24,3 +24,5 @@ jobs:
         run: chmod +x gradlew
       - name: Run URL policy tests
         run: ./gradlew :app:testDebugUnitTest --tests '*UrlPolicyTest'
+      - name: Compile instrumentation tests
+        run: ./gradlew :app:compileDebugAndroidTestKotlin
