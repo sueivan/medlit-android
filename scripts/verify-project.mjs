@@ -30,4 +30,32 @@ for (const command of [
 ]) {
   assert.ok(workflow.includes(command), `missing CI command: ${command}`);
 }
+
+const release = readFileSync('.github/workflows/android-release.yml', 'utf8');
+for (const secret of [
+  'ANDROID_KEYSTORE_BASE64',
+  'ANDROID_KEY_ALIAS',
+  'ANDROID_KEYSTORE_PASSWORD',
+  'ANDROID_KEY_PASSWORD'
+]) {
+  assert.ok(release.includes('secrets.' + secret), `missing secret: ${secret}`);
+}
+for (const step of ['apksigner verify', 'sha256sum', 'assembleRelease']) {
+  assert.ok(release.includes(step), `missing release step: ${step}`);
+}
+
+const readme = readFileSync('README.md', 'utf8');
+for (const topic of [
+  '医学文献检索与写作',
+  '苏裕盛 教授',
+  'Android 8.0',
+  '离线',
+  '系统浏览器',
+  'SHA-256',
+  '同一签名',
+  '不含分析统计',
+  '不申请敏感权限'
+]) {
+  assert.ok(readme.includes(topic), `missing README topic: ${topic}`);
+}
 console.log('project structure OK');

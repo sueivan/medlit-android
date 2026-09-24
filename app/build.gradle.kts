@@ -3,6 +3,14 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+val releaseSigningValues = mapOf(
+    "storePath" to System.getenv("ANDROID_KEYSTORE_PATH"),
+    "storePassword" to System.getenv("ANDROID_KEYSTORE_PASSWORD"),
+    "keyAlias" to System.getenv("ANDROID_KEY_ALIAS"),
+    "keyPassword" to System.getenv("ANDROID_KEY_PASSWORD")
+)
+val hasReleaseSigning = releaseSigningValues.values.all { !it.isNullOrBlank() }
+
 android {
     namespace = "com.suyusheng.medlit"
     compileSdk = 35
@@ -16,9 +24,23 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        if (hasReleaseSigning) {
+            create("release") {
+                storeFile = file(releaseSigningValues.getValue("storePath")!!)
+                storePassword = releaseSigningValues.getValue("storePassword")
+                keyAlias = releaseSigningValues.getValue("keyAlias")
+                keyPassword = releaseSigningValues.getValue("keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+            if (hasReleaseSigning) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
