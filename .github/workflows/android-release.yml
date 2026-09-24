@@ -1,0 +1,88 @@
+name: Android Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Validate signing secrets
+        shell: bash
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          : "${ANDROID_KEYSTORE_BASE64:?Missing ANDROID_KEYSTORE_BASE64}"
+          : "${ANDROID_KEY_ALIAS:?Missing ANDROID_KEY_ALIAS}"
+          : "${ANDROID_KEYSTORE_PASSWORD:?Missing ANDROID_KEYSTORE_PASSWORD}"
+          : "${ANDROID_KEY_PASSWORD:?Missing ANDROID_KEY_PASSWORD}"
+      - name: Prepare signing keystore
+        shell: bash
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/medlit-release.jks
+        run: printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$ANDROID_KEYSTORE_PATH"
+      - name: Build signed release APK
+        env:
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/medlit-release.jks
+        run: ./gradlew assembleRelease
+      - name: Remove temporary signing keystore
+        if: always()
+        run: rm -f "$RUNNER_TEMP/medlit-release.jks"
+      - name: Verify and checksum APK
+        shell: bash
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          EXPECTED_SIGNER_SHA256: 02fb00796f14b95c222c4d454ba1f3d3dec58b695bad6b6eaa580c76c52009cc
+        run: |
+          mkdir -p dist
+          mapfile -t apks < <(find app/build/outputs/apk/release -maxdepth 1 -type f -name '*-release.apk')
+          test "${#apks[@]}" -eq 1
+          cp "${apks[0]}" dist/medlit-1.0.0-release.apk
+          export PATH="$ANDROID_HOME/build-tools/35.0.0:$PATH"
+          cert_output="$(apksigner verify --verbose --print-certs dist/medlit-1.0.0-release.apk)"
+          printf '%s\n' "$cert_output"
+          printf '%s\n' "$cert_output" | grep -Fq "certificate SHA-256 digest: $EXPECTED_SIGNER_SHA256"
+          if unzip -Z1 dist/medlit-1.0.0-release.apk | grep -Eiq '(^|/)([^/]+\.(jks|keystore|p12|pfx|pem|key)|keystore\.properties)$'; then
+            echo 'Forbidden signing file found inside APK' >&2
+            exit 1
+          fi
+          if grep -aFq -- "$ANDROID_KEYSTORE_PASSWORD" dist/medlit-1.0.0-release.apk || grep -aFq -- "$ANDROID_KEY_PASSWORD" dist/medlit-1.0.0-release.apk; then
+            echo 'Signing password found inside APK' >&2
+            exit 1
+          fi
+          cd dist
+          sha256sum medlit-1.0.0-release.apk > medlit-1.0.0-release.apk.sha256
+      - name: Upload signed release artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: medlit-1.0.0-release
+          path: |
+            dist/medlit-1.0.0-release.apk
+            dist/medlit-1.0.0-release.apk.sha256
+          if-no-files-found: error
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --generate-notes --verify-tag

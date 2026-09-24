@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="医学文献检索与写作学习应用：练习 PubMed 检索式，学习 Zotero 文献管理、循证精读、论文写作与负责任的 AI 使用。">
+  <meta name="theme-color" content="#124e45">
+  <meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="医学文献写作">
+  <title>医学文献检索与写作 · MedLit</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23124e45'/%3E%3Cpath d='M7 9h6l3 2 3-2h6v15h-6l-3 2-3-2H7zM16 11v15' fill='none' stroke='%23dcf5a7' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="manifest" href="./manifest.json"><link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./zotero.css"><link rel="stylesheet" href="./pwa.css"><script src="./app.js" defer></script>
+</head>
+<body>
+<a class="skip-link" href="#main">跳到主要内容</a>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M12 6c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V5c-3-1-6-1-9 1Z"/><path d="M12 6v15"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H5v18h14V8Z"/><path d="M14 3v5h5M8 12h8M8 16h6"/></symbol>
+<symbol id="i-pen" viewBox="0 0 24 24"><path d="m15 4 5 5M3 21l6-1L21 8a2 2 0 0 0 0-3l-2-2a2 2 0 0 0-3 0L4 15Z"/></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 2.8 6.2L21 12l-6.2 2.8L12 21l-2.8-6.2L3 12l6.2-2.8ZM20 2v4M18 4h4"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+<symbol id="i-external" viewBox="0 0 24 24"><path d="M14 3h7v7m-1-6-9 9M10 5H4v15h15v-6"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V3H3v13h5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="m10 7 3-3a5 5 0 0 1 7 7l-3 3M14 17l-3 3a5 5 0 0 1-7-7l3-3M8 16l8-8"/></symbol>
+<symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+</defs></svg>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a href="#home" class="brand" aria-label="MedLit 学习首页"><span class="brand-mark"><svg class="icon"><use href="#i-book"/></svg></span><span>MedLit<span class="brand-sub">医学科研学习空间</span></span></a>
+    <div class="nav-caption">学习工作台</div>
+    <nav class="main-nav" aria-label="主要导航">
+      <a href="#home" data-view="home" class="nav-link active" aria-current="page"><svg class="icon"><use href="#i-grid"/></svg>学习概览</a>
+      <a href="#search" data-view="search" class="nav-link"><svg class="icon"><use href="#i-search"/></svg>文献检索<span class="nav-number">01</span></a>
+      <a href="#zotero" data-view="zotero" class="nav-link"><svg class="icon"><use href="#i-file"/></svg>Zotero 管理<span class="nav-number">02</span></a>
+      <a href="#reading" data-view="reading" class="nav-link"><svg class="icon"><use href="#i-book"/></svg>精读与评价<span class="nav-number">03</span></a>
+      <a href="#writing" data-view="writing" class="nav-link"><svg class="icon"><use href="#i-pen"/></svg>论文写作<span class="nav-number">04</span></a>
+      <a href="#ethics" data-view="ethics" class="nav-link"><svg class="icon"><use href="#i-spark"/></svg>AI 学术规范</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="sidebar-note"><svg class="icon"><use href="#i-target"/></svg><p>每一个结论，<br>都应找到它的证据。</p><span>让检索可复现，让写作有依据</span></div>
+      <a href="https://pubmed.ncbi.nlm.nih.gov/help/" target="_blank" rel="noopener noreferrer" class="help-link">PubMed 官方指南<svg class="icon small"><use href="#i-external"/></svg></a>
+      <div class="course-credit"><span class="avatar">苏</span><div>制作者：苏裕盛 教授<span>医学文献检索与写作</span></div></div>
+    </div>
+  </aside>
+  <div class="sidebar-scrim" id="scrim" hidden></div>
+  <div class="workspace">
+    <header class="topbar"><div class="breadcrumb"><button id="menu-toggle" class="icon-button mobile-only" aria-controls="sidebar" aria-expanded="false" aria-label="打开导航"><svg class="icon"><use href="#i-menu"/></svg></button><span>医学文献检索与写作</span><span class="crumb-divider">/</span><span id="current-view">学习概览</span></div><span class="header-tag">医学 · 护理 · 健康科学</span></header>
+    <main id="main" tabindex="-1">
+      <section id="view-home" class="view" aria-labelledby="home-title">
+        <div class="page-heading"><div><span class="eyebrow">LEARN. QUESTION. DISCOVER.</span><h1 id="home-title">从一个问题，开始一项研究<span class="heading-dot">。</span></h1><p>找到文献，读懂证据，把研究写清楚。</p></div><span class="outline-badge">课程学习空间</span></div>
+        <div class="hero-grid">
+          <article class="hero-panel">
+            <span class="hero-kicker"><span class="tiny-square"></span>检索是研究的第一步</span>
+            <h2>让好问题，<br>遇见好证据。</h2>
+            <p>从临床与照护中的真实问题出发，<br>建立一条清晰、可复现的文献检索路径。</p>
+            <a href="#search" class="button lime">开始检索练习<svg class="icon"><use href="#i-arrow"/></svg></a>
+            <div class="hero-bottom"><span>问题拆解</span><span class="flow-line"></span><span>系统检索</span><span class="flow-line"></span><span>证据判断</span></div>
+          </article>
+          <article class="question-card"><div class="card-label"><svg class="icon"><use href="#i-target"/></svg>跟着一个问题学</div><h3>运动干预能否改善<br>阿尔茨海默病患者的认知功能？</h3><p class="small-muted">先拆解问题，再决定怎么检索。</p><div class="pico-list"><div><span class="pico-letter">P</span><span><small>Population · 研究人群</small>阿尔茨海默病患者</span></div><div><span class="pico-letter">I</span><span><small>Intervention · 干预措施</small>运动干预</span></div><div><span class="pico-letter">C</span><span><small>Comparison · 对照</small>常规照护或其他对照</span></div><div><span class="pico-letter">O</span><span><small>Outcome · 结局</small>认知功能</span></div></div><a class="text-link" href="#search">用这个问题开始<svg class="icon small"><use href="#i-arrow"/></svg></a></article>
+        </div>
+        <div class="section-heading"><div><h2>你的研究，从这里展开</h2><p>沿着四个环节，逐步建立文献利用能力。</p></div><span class="section-meta">学习路径 / 4 个环节</span></div>
+        <div class="path-grid">
+          <a href="#search" class="path-card"><div class="path-card-top"><span class="step-index">01</span><svg class="icon"><use href="#i-search"/></svg></div><h3>找得到</h3><p>拆解研究问题，组合关键词，<br>构建 PubMed 检索式。</p><div class="path-card-footer"><span>检索语言 · 数据库 · MeSH</span><svg class="icon small"><use href="#i-arrow"/></svg></div></a>
+          <a href="#zotero" class="path-card"><div class="path-card-top"><span class="step-index">02</span><svg class="icon"><use href="#i-file"/></svg></div><h3>管得好</h3><p>收集、分类、去重与批注，<br>让来源随时可以追溯。</p><div class="path-card-footer"><span>Zotero · 标签 · 笔记</span><svg class="icon small"><use href="#i-arrow"/></svg></div></a>
+          <a href="#reading" class="path-card"><div class="path-card-top"><span class="step-index">03</span><svg class="icon"><use href="#i-book"/></svg></div><h3>读得懂</h3><p>识别研究设计与偏倚，<br>提取真正有用的证据。</p><div class="path-card-footer"><span>精读框架 · 证据提取</span><svg class="icon small"><use href="#i-arrow"/></svg></div></a>
+          <a href="#writing" class="path-card"><div class="path-card-top"><span class="step-index">04</span><svg class="icon"><use href="#i-pen"/></svg></div><h3>写得清</h3><p>组织论证，规范引用，<br>让每个结论都有出处。</p><div class="path-card-footer"><span>IMRaD · 综述 · 引用规范</span><svg class="icon small"><use href="#i-arrow"/></svg></div></a>
+        </div>
+        <div class="lower-grid"><section class="resource-section" aria-labelledby="resources-title"><div class="section-heading compact"><h2 id="resources-title">常用检索入口</h2><span class="section-meta">连接原始来源</span></div><div class="resource-links"><a href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank" rel="noopener noreferrer"><span class="resource-initial blue">P</span><span><strong>PubMed</strong><small>生物医学文献</small></span><svg class="icon small"><use href="#i-external"/></svg></a><a href="https://www.cnki.net/" target="_blank" rel="noopener noreferrer"><span class="resource-initial rust">知</span><span><strong>中国知网</strong><small>中文学术文献</small></span><svg class="icon small"><use href="#i-external"/></svg></a><a href="https://meshb.nlm.nih.gov/" target="_blank" rel="noopener noreferrer"><span class="resource-initial green">M</span><span><strong>MeSH Browser</strong><small>医学主题词核验</small></span><svg class="icon small"><use href="#i-external"/></svg></a><a href="https://www.equator-network.org/" target="_blank" rel="noopener noreferrer"><span class="resource-initial violet">E</span><span><strong>EQUATOR</strong><small>研究报告指南</small></span><svg class="icon small"><use href="#i-external"/></svg></a></div></section><a href="#ethics" class="ai-banner"><span class="ai-banner-label"><svg class="icon"><use href="#i-spark"/></svg>AI 与学术诚信</span><h3>把 AI 变成助手，<br>把判断留给自己。</h3><p>核对原文、保留过程、如实披露。</p><span class="text-link">查看使用规范<svg class="icon small"><use href="#i-arrow"/></svg></span></a></div>
+        <section id="install-app-shell" class="install-card" aria-labelledby="install-title"><div class="install-card-content"><img class="app-icon" src="./icons/icon-192.png" alt=""><div><h2 id="install-title">安装“医学文献检索与写作”</h2><p>安装后可从桌面启动；首次联网缓存完成后，核心课程可离线使用。</p><span class="creator-line">制作者：苏裕盛 教授</span><p id="ios-install-help" class="ios-install-steps" hidden>iPhone / iPad：点击 Safari 的“分享”，再选择“添加到主屏幕”。</p></div></div><div class="install-actions"><button class="button primary" id="install-app" hidden>安装到设备</button><span class="install-help" id="install-state">可直接使用，无需注册</span></div></section>
+      </section>
+      <section id="view-search" class="view" hidden aria-labelledby="search-title">
+        <div class="page-heading"><div><span class="eyebrow">01 / SEARCH WITH PURPOSE</span><h1 id="search-title">把研究问题，变成检索式。</h1><p>同一概念用 OR 扩展，不同概念用 AND 连接。</p></div></div>
+        <div class="workbench-grid"><form id="search-form" class="panel search-form" novalidate><div class="panel-heading"><h2>构建 PubMed 检索式</h2><button type="button" class="subtle-button" id="load-example">载入示例</button></div><p class="form-intro">输入英文自由词；同义词之间用分号或换行分隔。</p>
+          <label for="population"><span class="field-step">P</span>研究人群 / 疾病 <span class="required">必填</span></label><textarea id="population" name="population" rows="2" maxlength="1000" aria-describedby="population-help">Alzheimer disease; Alzheimer's disease; alzheimer*</textarea><small id="population-help" class="field-help">例如：Alzheimer disease; Alzheimer's disease; alzheimer*</small>
+          <label for="population-mesh" class="sub-label">对应 MeSH 主题词 <span>选填，一次填写一个</span></label><input id="population-mesh" maxlength="200" placeholder="在 MeSH Browser 核验后填写">
+          <label for="intervention"><span class="field-step">I</span>干预措施 / 暴露因素</label><textarea id="intervention" name="intervention" rows="2" maxlength="1000">exercise; physical activity</textarea>
+          <label for="intervention-mesh" class="sub-label">对应 MeSH 主题词 <span>选填，一次填写一个</span></label><input id="intervention-mesh" maxlength="200" placeholder="在 MeSH Browser 核验后填写">
+          <label class="checkbox-label" for="include-outcome"><input type="checkbox" id="include-outcome">加入结局指标（可选）</label><input id="outcome" maxlength="1000" value="cognition; cognitive function" aria-label="结局指标英文同义词" disabled><p class="field-help">初检可先组合人群与干预；加入结局可能漏掉相关文献。对照也通常不必单独加入。</p>
+          <p class="form-error" id="search-error" role="alert" hidden></p><button type="submit" class="button primary full-width"><svg class="icon"><use href="#i-search"/></svg>生成检索式</button>
+        </form><div class="results-column"><article class="query-panel"><div class="query-header"><span>检索式预览</span><span class="query-tag">PubMed</span></div><pre id="query-output" tabindex="0" aria-live="polite"></pre><div class="query-actions"><button class="button light-button" id="copy-query"><svg class="icon small"><use href="#i-copy"/></svg>复制检索式</button><a class="button lime" id="open-pubmed" target="_blank" rel="noopener noreferrer">去 PubMed 检索<svg class="icon small"><use href="#i-external"/></svg></a></div><p>这里生成练习检索式；实际文献和命中数请到 PubMed 查看。</p></article><article class="panel teaching-note"><span class="eyebrow">理解这条检索式</span><h3>先扩大，再交叉。</h3><div class="logic-row"><b>OR</b><p>合并同一概念的不同表达。<br><span>exercise OR physical activity</span></p></div><div class="logic-row"><b>AND</b><p>寻找同时涉及两个概念的文献。<br><span>疾病概念 AND 干预概念</span></p></div><div class="logic-row"><b>[tiab]</b><p>限制在题名和摘要等字段检索。<br><span>本工具使用 [Title/Abstract] 全称。</span></p></div><a href="https://pubmed.ncbi.nlm.nih.gov/help/" target="_blank" rel="noopener noreferrer" class="text-link">核对 NLM 官方检索说明<svg class="icon small"><use href="#i-external"/></svg></a></article></div></div>
+        <div class="note-strip"><svg class="icon"><use href="#i-file"/></svg><div><strong>记下你的检索过程</strong><p>记录数据库、检索日期、完整检索式、筛选条件与实际命中数。正式综述应补充主题词与同义词，并在 PubMed 的 Search Details 核对解析。</p></div></div>
+        <details class="lesson-details"><summary>中文文献怎么检索？</summary><p>在中国知网使用高级检索，先拆分“研究人群”和“干预措施”两组概念，再补充中文同义词，如“阿尔茨海默病 / 阿兹海默病”“运动 / 身体活动”。根据研究目的选择主题、篇名或关键词字段，记录每次查询和筛选条件。PubMed 的字段标签不能直接复制到知网。</p><a href="https://www.cnki.net/" target="_blank" rel="noopener noreferrer" class="text-link">打开中国知网<svg class="icon small"><use href="#i-external"/></svg></a></details>
+      </section>
+      <section id="view-zotero" class="view" hidden aria-labelledby="zotero-title">
+        <div class="page-heading"><div><span class="eyebrow">02 / MANAGE WITH ZOTERO</span><h1 id="zotero-title">把找到的文献，变成可用的资料库。</h1><p>收集只是开始；核对信息、分类、批注和规范引用，才让文献真正服务写作。</p></div><span class="outline-badge">免费开源工具</span></div>
+        <div class="zotero-flow" aria-label="Zotero 文献工作流">
+          <article><span>01</span><strong>收集</strong><p>用浏览器 Connector 保存，或输入 DOI、PMID、ISBN。</p></article>
+          <article><span>02</span><strong>整理</strong><p>核对题名与作者，建立分类和标签，处理重复条目。</p></article>
+          <article><span>03</span><strong>精读</strong><p>附加 PDF、做批注，把关键证据写进结构化笔记。</p></article>
+          <article><span>04</span><strong>引用</strong><p>在 Word 等文字处理器中插入引文并生成参考文献。</p></article>
+        </div>
+        <div class="zotero-grid">
+          <section class="panel zotero-setup"><div class="panel-heading"><div><span class="eyebrow">首次配置</span><h2>电脑上的完整组合</h2></div><a class="button secondary" href="https://www.zotero.org/download/" target="_blank" rel="noopener noreferrer">官方下载<svg class="icon small"><use href="#i-external"/></svg></a></div>
+            <ol class="number-list"><li><b>安装 Zotero 桌面版</b><span>资料库、PDF、笔记与引用的核心。</span></li><li><b>安装浏览器 Connector</b><span>在 PubMed、期刊网页或图书页面一键保存。</span></li><li><b>检查文字处理器插件</b><span>在 Word、LibreOffice 或 Google Docs 中插入动态引文。</span></li></ol>
+            <div class="note-inline"><strong>先核对，再引用</strong><p>网页抓取的作者、题名、期刊、年份、卷期页码和 DOI 仍可能不完整；请与原始页面或 PDF 首页逐项核对。</p></div>
+          </section>
+          <section class="panel library-template"><div class="panel-heading"><div><span class="eyebrow">示例资料库</span><h2>按研究任务组织，而非按文件堆放</h2></div><button class="button secondary" id="copy-zotero-library"><svg class="icon small"><use href="#i-copy"/></svg>复制结构</button></div>
+            <pre id="zotero-library-text">00_待处理
+01_研究背景
+02_风险因素
+03_非药物干预
+04_整合照护
+05_方法学与量表
+90_本论文已引用</pre>
+            <p class="small-muted">一个条目可以同时放入多个分类，不会产生重复副本。标签建议记录：研究设计、人群、地区、证据用途、阅读状态。</p>
+          </section>
+        </div>
+        <section class="panel zotero-route"><div class="panel-heading"><div><span class="eyebrow">课堂练习</span><h2>从 PubMed 到论文的 6 个动作</h2></div><span id="zotero-count" class="count-badge" aria-live="polite">0 / 6</span></div><div class="route-grid" id="zotero-checklist">
+          <label><input type="checkbox"><span><b>1. 保存</b>在 PubMed 结果页用 Connector 保存选中文献。</span></label>
+          <label><input type="checkbox"><span><b>2. 核对</b>对照原始页面检查题名、作者、年份和 DOI / PMID。</span></label>
+          <label><input type="checkbox"><span><b>3. 归类</b>放入对应分类，并添加少量、一致的标签。</span></label>
+          <label><input type="checkbox"><span><b>4. 精读</b>附加合法取得的全文，用批注和笔记提取证据。</span></label>
+          <label><input type="checkbox"><span><b>5. 引用</b>在 Word 中使用 Add/Edit Citation，而不是手工输入序号。</span></label>
+          <label><input type="checkbox"><span><b>6. 更新</b>修改引文后 Refresh，确认文内引用与文后条目对应。</span></label>
+        </div><p class="small-muted">清单只保存在当前页面；刷新后重置。Zotero 可以管理格式，但不能判断文献是否真的支持你的论点。</p></section>
+        <div class="zotero-grid bottom-gap">
+          <section class="panel"><div class="panel-heading"><div><span class="eyebrow">结构化笔记</span><h2>把证据和自己的判断分开</h2></div><button class="button secondary" id="copy-zotero-note"><svg class="icon small"><use href="#i-copy"/></svg>复制笔记模板</button></div><pre id="zotero-note-text" class="note-template">研究问题：
+设计 / 场景：
+样本与人群：
+干预 / 暴露 / 对照：
+主要结局与效应量：
+局限：
+原文页码或段落：
+可用于论文的论点：
+我的判断与待核验问题：</pre></section>
+          <section class="panel phone-panel"><span class="eyebrow">没有电脑时</span><h2>手机可以先收集，完整写作留到电脑。</h2><p>Zotero 移动端可查看资料库并通过标识符添加条目；临时制作书目可用 ZoteroBib。需要 Word 插件、批量整理和完整引用流程时，仍建议使用电脑。</p><div class="link-row"><a class="text-link" href="https://www.zotero.org/download/" target="_blank" rel="noopener noreferrer">Zotero 下载<svg class="icon small"><use href="#i-external"/></svg></a><a class="text-link" href="https://zbib.org/" target="_blank" rel="noopener noreferrer">ZoteroBib<svg class="icon small"><use href="#i-external"/></svg></a></div><div class="ai-boundary"><svg class="icon"><use href="#i-spark"/></svg><div><strong>AI + Zotero 的边界</strong><p>AI 可帮你提出关键词或整理已提供的原文；Zotero 保存可追溯来源。题名、DOI、数据和引用关系必须由人核验。</p></div></div></section>
+        </div>
+        <details class="lesson-details"><summary>Zotero 会自动帮我“写对”参考文献吗？</summary><p>它能按选定样式生成并更新引文与参考文献，但结果依赖条目元数据是否正确、样式是否符合课程或期刊要求。提交前仍要核对目标要求、每条文献以及文内外对应关系。</p><div class="detail-links"><a class="text-link" href="https://www.zotero.org/support/word_processor_integration" target="_blank" rel="noopener noreferrer">文字处理器插件说明<svg class="icon small"><use href="#i-external"/></svg></a><a class="text-link" href="https://www.zotero.org/styles" target="_blank" rel="noopener noreferrer">Zotero 引用样式库<svg class="icon small"><use href="#i-external"/></svg></a></div></details>
+      </section>
+      <section id="view-reading" class="view" hidden aria-labelledby="reading-title">
+        <div class="page-heading"><div><span class="eyebrow">03 / READ THE EVIDENCE</span><h1 id="reading-title">读懂结果，更要读懂它的边界。</h1><p>带着问题读原文，区分作者报告的事实与自己的判断。</p></div></div>
+        <div class="reading-intro"><span class="large-quote">“</span><h2>这篇研究，真的回答了我的问题吗？</h2><p>从研究设计出发，再看结果是否可信、能否用于你的研究情境。</p></div>
+        <div class="reading-grid"><article class="panel"><span class="step-index">01</span><h3>先定位研究</h3><p>看研究问题、对象与场景。辨别随机试验、队列研究、横断面研究或证据综合，确认它是否适合回答当前问题。</p><span class="micro-label">先读摘要，再回到方法</span></article><article class="panel"><span class="step-index">02</span><h3>再检查方法</h3><p>追问样本如何进入研究、对照是否合理、结局如何测量、失访怎样处理。观察性研究还应检查混杂因素及调整方法。</p><span class="micro-label">使用与设计匹配的评价工具</span></article><article class="panel"><span class="step-index">03</span><h3>最后解释结果</h3><p>同时提取效应量与置信区间，关注绝对差异和实际意义。相关性不能直接写成因果；统计学显著也不等于临床重要。</p><span class="micro-label">把局限与结果放在一起看</span></article></div>
+        <section class="panel evidence-panel"><div class="panel-heading"><div><h2>一篇文献，一张证据卡</h2><p class="small-muted">按原文填写；缺少的信息写“未报告”。</p></div><button class="button secondary" id="copy-evidence"><svg class="icon small"><use href="#i-copy"/></svg>复制精读模板</button></div><div class="table-scroll"><table><thead><tr><th scope="col">提取项目</th><th scope="col">记录什么</th><th scope="col">要追问的问题</th></tr></thead><tbody><tr><th scope="row">文献信息</th><td>作者、年份、题名、DOI / PMID</td><td>原文是否与引用完全对应？</td></tr><tr><th scope="row">研究设计</th><td>研究类型、场景、纳入标准、样本量</td><td>设计能回答这个问题吗？</td></tr><tr><th scope="row">干预 / 暴露</th><td>具体内容、剂量或频率、持续时间、对照</td><td>两组还有哪些重要差异？</td></tr><tr><th scope="row">主要结果</th><td>预设结局、效应量、置信区间、随访时间</td><td>结果多大？有多不确定？</td></tr><tr><th scope="row">局限与适用性</th><td>偏倚、混杂、失访、与目标人群的差异</td><td>结论能外推到哪里？</td></tr></tbody></table></div></section>
+        <details class="lesson-details"><summary>报告指南与质量评价工具，有什么不同？</summary><p>报告指南帮助作者完整说明研究做了什么，不能直接当作研究质量评分表。偏倚风险或方法学评价工具用于判断具体研究结果的可信程度；应根据研究设计选择工具，避免用一个总分代替逐项判断。</p><a class="text-link" href="https://www.equator-network.org/" target="_blank" rel="noopener noreferrer">在 EQUATOR 查找报告指南<svg class="icon small"><use href="#i-external"/></svg></a></details>
+      </section>
+      <section id="view-writing" class="view" hidden aria-labelledby="writing-title">
+        <div class="page-heading"><div><span class="eyebrow">04 / WRITE WITH CLARITY</span><h1 id="writing-title">让每一段，都有明确的任务。</h1><p>先组织证据和论证，再润色语言。写清楚，比写得复杂更重要。</p></div></div>
+        <div class="writing-layout"><section class="panel imrad-panel"><div class="panel-heading"><h2>原始研究的 IMRaD 结构</h2><span class="outline-badge">写作框架</span></div><div class="imrad-row"><span>I</span><div><h3>引言 <small>Introduction</small></h3><p>已知什么？还缺什么？本研究具体回答什么？从研究背景收束到明确问题。</p></div></div><div class="imrad-row"><span>M</span><div><h3>方法 <small>Methods</small></h3><p>怎样完成研究？说明设计、对象、测量、分析与伦理，让读者能够判断并复现。</p></div></div><div class="imrad-row"><span>R</span><div><h3>结果 <small>Results</small></h3><p>发现了什么？围绕预设结局报告数据、效应量与不确定性，文字与图表避免重复。</p></div></div><div class="imrad-row"><span>D</span><div><h3>讨论 <small>Discussion</small></h3><p>结果意味着什么？联系既有证据解释差异，说明局限、适用范围与下一步研究。</p></div></div></section><aside class="writing-aside"><article class="panel"><span class="eyebrow">先选对指南</span><h3>让研究设计决定报告规范</h3><div class="guideline-list"><a href="https://www.equator-network.org/reporting-guidelines/consort/" target="_blank" rel="noopener noreferrer"><span>随机对照试验</span><strong>CONSORT ↗</strong></a><a href="https://www.equator-network.org/reporting-guidelines/strobe/" target="_blank" rel="noopener noreferrer"><span>观察性研究</span><strong>STROBE ↗</strong></a><a href="https://www.equator-network.org/reporting-guidelines/prisma/" target="_blank" rel="noopener noreferrer"><span>系统综述</span><strong>PRISMA ↗</strong></a></div><p class="small-muted">进入官方网站核对适用版本与扩展指南。</p></article><article class="writing-reminder"><svg class="icon"><use href="#i-link"/></svg><h3>引用，要能追溯到原文。</h3><p>核对题名、作者、年份、期刊与 DOI。格式依课程或期刊要求统一；APA 7 与 Vancouver 不宜混用。</p></article></aside></div>
+        <section class="panel synthesis-panel"><span class="eyebrow">写综述时</span><h2>用一个论点组织多篇文献。</h2><div class="synthesis-flow"><span>提出主题判断</span><svg class="icon small"><use href="#i-arrow"/></svg><span>比较一致与分歧</span><svg class="icon small"><use href="#i-arrow"/></svg><span>解释差异和局限</span><svg class="icon small"><use href="#i-arrow"/></svg><span>指出待解决问题</span></div><p>按主题、机制、方法或研究场景组织证据。写出研究之间的关系，避免逐篇罗列摘要。</p></section>
+        <section class="panel"><div class="panel-heading"><h2>提交前，逐项自查</h2><span id="writing-count" class="count-badge" aria-live="polite">0 / 5</span></div><p class="small-muted">此清单用于本次自查，刷新页面后会重置。</p><div class="checklist" id="writing-checklist"><label><input type="checkbox">研究目的、方法、结果与结论彼此一致。</label><label><input type="checkbox">每个关键判断有可核验的原始来源。</label><label><input type="checkbox">没有把相关性、探索性结果写成确定的因果结论。</label><label><input type="checkbox">参考文献完整，文内引用与文后条目一一对应。</label><label><input type="checkbox">按要求披露 AI 使用，并逐条核对它参与生成的内容。</label></div></section>
+      </section>
+      <section id="view-ethics" class="view" hidden aria-labelledby="ethics-title">
+        <div class="page-heading"><div><span class="eyebrow">AI / USE IT RESPONSIBLY</span><h1 id="ethics-title">AI 可以参与，责任由人承担。</h1><p>把工具用在可核验的环节，把研究判断保留在自己手中。</p></div></div>
+        <div class="ethics-grid"><article class="panel"><span class="pill green-pill">适合辅助的环节</span><h2>拆解、整理与表达</h2><ul class="clean-list"><li><svg class="icon"><use href="#i-check"/></svg><span>拆分研究概念，提出同义词候选，再到数据库核验。</span></li><li><svg class="icon"><use href="#i-check"/></svg><span>根据你提供的原文提取信息，逐项回查原文位置。</span></li><li><svg class="icon"><use href="#i-check"/></svg><span>检查段落结构、语法和逻辑，保留原始证据强度。</span></li></ul></article><article class="panel"><span class="pill amber-pill">必须由你完成的核验</span><h2>来源、事实与边界</h2><ul class="plain-list"><li>打开 DOI / PubMed 页面，确认引用确实存在且支持论点。</li><li>核对数据、研究设计和局限，不补写原文没有的信息。</li><li>保护患者信息及保密材料；使用前确认工具与机构要求。</li></ul></article></div>
+        <article class="disclosure-card"><div><span class="eyebrow">透明报告</span><h2>记录你用了什么，改了什么，核对了什么。</h2><p>ICMJE 要求按规定披露 AI 使用情况；AI 不能列为作者。投稿时还应查阅目标期刊的具体要求。</p><a href="https://www.icmje.org/recommendations/browse/artificial-intelligence/ai-use-by-authors.html" target="_blank" rel="noopener noreferrer" class="text-link">查看 ICMJE 作者使用 AI 建议<svg class="icon small"><use href="#i-external"/></svg></a></div><div class="disclosure-example"><span class="micro-label">使用记录模板 · 请按实际情况填写</span><p id="disclosure-text">工具及版本：［填写］\n使用日期：［填写］\n用于哪些环节：［填写］\n采纳与修改的内容：［填写］\n人工核验的方法与结果：［填写］</p><button class="button secondary" id="copy-disclosure"><svg class="icon small"><use href="#i-copy"/></svg>复制记录模板</button></div></article>
+        <section class="panel prompt-panel"><div class="panel-heading"><div><span class="eyebrow">可复制的练习提示词</span><h2>让 AI 协助精读一篇原文</h2></div><button class="button secondary" id="copy-prompt"><svg class="icon small"><use href="#i-copy"/></svg>复制提示词</button></div><blockquote id="prompt-text">请仅依据我提供的论文原文，提取研究问题、设计、样本、干预或暴露、对照、主要结局、效应量及置信区间、局限。每条信息标明原文页码或段落；没有报告的信息写“未报告”。将作者陈述与分析判断分开，不生成原文中不存在的数字或参考文献。最后列出需要我人工复核的三处关键内容。</blockquote><p class="small-muted">请先确认有权使用材料，并去除可识别个人的信息。所有输出都需要回查原文。</p></section>
+      </section>
+      <footer class="footer"><span><svg class="icon small"><use href="#i-book"/></svg>MedLit · 医学文献检索与写作</span><span>制作者：苏裕盛 教授 · 以原文为据，以问题为起点。</span></footer>
+    </main>
+  </div>
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<div id="network-status" class="status-banner offline" role="status" aria-live="polite" hidden>当前处于离线状态；已缓存的核心内容仍可使用。</div>
+<div id="update-status" class="status-banner" role="status" aria-live="polite" hidden><span>应用已有新版本。</span><button class="button lime" id="update-app">立即更新</button></div>
+</body></html>
