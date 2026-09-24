@@ -26,10 +26,17 @@ for (const command of [
   'node scripts/verify-project.mjs',
   'node scripts/verify-web-assets.mjs',
   'bash scripts/check-no-secrets.sh',
-  './gradlew testDebugUnitTest lintDebug assembleDebug'
+  './gradlew testDebugUnitTest lintDebug assembleDebug',
+  './gradlew connectedDebugAndroidTest'
 ]) {
   assert.ok(workflow.includes(command), `missing CI command: ${command}`);
 }
+assert.match(workflow, /api-level:\s*\[26, 35\]/, 'instrumentation must cover Android 8 and current Android');
+assert.match(
+  workflow,
+  /ReactiveCircus\/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d/,
+  'instrumentation runner must be pinned to the reviewed v2.38.0 commit'
+);
 
 const release = readFileSync('.github/workflows/android-release.yml', 'utf8');
 for (const secret of [
@@ -39,8 +46,13 @@ for (const secret of [
   'ANDROID_KEY_PASSWORD'
 ]) {
   assert.ok(release.includes('secrets.' + secret), `missing secret: ${secret}`);
+  assert.doesNotMatch(
+    release,
+    new RegExp(`^ {6}${secret}:\\s*\\$\\{\\{\\s*secrets\\.${secret}\\s*\\}\\}`, 'm'),
+    `${secret} must not be exposed to every job step`
+  );
 }
-for (const step of ['apksigner verify', 'sha256sum', 'assembleRelease']) {
+for (const step of ['apksigner verify', 'sha256sum', 'assembleRelease', 'if: always()', 'EXPECTED_SIGNER_SHA256']) {
   assert.ok(release.includes(step), `missing release step: ${step}`);
 }
 assert.doesNotMatch(
@@ -48,11 +60,15 @@ assert.doesNotMatch(
   /^ {6}ANDROID_KEYSTORE_PATH:\s*\$\{\{\s*runner\.temp\s*\}\}/m,
   'runner context is unavailable in job-level env'
 );
+const releaseBuildStep = release.match(
+  /      - name: Build signed release APK\n[\s\S]*?(?=\n      - name:)/
+)?.[0] ?? '';
 assert.match(
-  release,
-  /- name: Build signed release APK\n\s+env:\n\s+ANDROID_KEYSTORE_PATH:\s*\$\{\{\s*runner\.temp\s*\}\}\/medlit-release\.jks\n\s+run: \.\/gradlew assembleRelease/,
+  releaseBuildStep,
+  /ANDROID_KEYSTORE_PATH:\s*\$\{\{\s*runner\.temp\s*\}\}\/medlit-release\.jks/,
   'release build must receive the runner-scoped keystore path'
 );
+assert.match(releaseBuildStep, /run: \.\/gradlew assembleRelease/);
 
 const readme = readFileSync('README.md', 'utf8');
 for (const topic of [

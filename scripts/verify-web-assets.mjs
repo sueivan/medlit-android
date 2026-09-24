@@ -23,4 +23,6 @@ assert.match(js, /appassets\.androidplatform\.net/);
 assert.match(js, /install-app-shell/);
 assert.match(js, /serviceWorker/);
 assert.match(js, /if \(!isAndroidContainer\)/);
+assert.doesNotMatch(js, /\?\./, 'Android 8 WebView cannot parse optional chaining');
+assert.doesNotMatch(js, /Object\.hasOwn\(/, 'Android 8 WebView does not provide Object.hasOwn');
 console.log('web assets OK');

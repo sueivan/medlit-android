@@ -13,7 +13,7 @@ function setMenu(open) {
 }
 function renderView(focus = false) {
   const name = location.hash.slice(1) || 'home';
-  const next = Object.hasOwn(viewNames, name) ? name : 'home';
+  const next = Object.prototype.hasOwnProperty.call(viewNames, name) ? name : 'home';
   document.querySelectorAll('.view').forEach(el => { el.hidden = el.id !== `view-${next}`; });
   document.querySelectorAll('[data-view]').forEach(el => {
     const active = el.dataset.view === next;
@@ -33,7 +33,7 @@ window.addEventListener('resize', () => { if (window.innerWidth > 720) setMenu(f
 function toast(message) { clearTimeout(toastTimer); $('toast').textContent = message; $('toast').hidden = false; toastTimer = setTimeout(() => { $('toast').hidden = true; }, 3500); }
 async function copyText(value) {
   try {
-    if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(value);
+    if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(value);
     else {
       const temporary = document.createElement('textarea'); temporary.value = value;
       temporary.style.position = 'fixed'; temporary.style.left = '-9999px'; document.body.appendChild(temporary); temporary.select();
@@ -104,9 +104,12 @@ $('zotero-checklist').addEventListener('change', () => { $('zotero-count').textC
 
 const isAndroidContainer = location.hostname === 'appassets.androidplatform.net';
 if (isAndroidContainer) {
-  $('install-app-shell')?.setAttribute('hidden', '');
-  $('network-status')?.setAttribute('hidden', '');
-  $('update-status')?.setAttribute('hidden', '');
+  const installShell = $('install-app-shell');
+  const networkStatus = $('network-status');
+  const updateStatus = $('update-status');
+  if (installShell) installShell.setAttribute('hidden', '');
+  if (networkStatus) networkStatus.setAttribute('hidden', '');
+  if (updateStatus) updateStatus.setAttribute('hidden', '');
 }
 
 if (!isAndroidContainer) {
@@ -167,7 +170,7 @@ renderNetworkStatus();
         showUpdate(registration.waiting);
         registration.addEventListener('updatefound', () => {
           const worker = registration.installing;
-          worker?.addEventListener('statechange', () => { if (worker.state === 'installed') showUpdate(worker); });
+          if (worker) worker.addEventListener('statechange', () => { if (worker.state === 'installed') showUpdate(worker); });
         });
       } catch (_) {
         installState.textContent = '离线功能暂时不可用';
@@ -189,7 +192,7 @@ function stageSearch(input) {
   renderQuery(query); location.hash = 'search'; renderView(true);
   return { query, pubmedUrl: $('open-pubmed').href, status: 'prepared', note: '检索式已在页面生成，尚未执行外部检索。' };
 }
-if (document.modelContext?.registerTool) {
+if (document.modelContext && document.modelContext.registerTool) {
   const lifecycle = new AbortController();
   const register = () => { try { Promise.resolve(document.modelContext.registerTool({ name: 'prepare_pubmed_query', title: '构建 PubMed 检索式', description: '填入页面检索表单并生成可复制检索式；不执行外部检索，不获取文献或命中数。同义词以分号分隔。', inputSchema: { type: 'object', properties: { population: { type: 'string', minLength: 1, maxLength: 1000 }, intervention: { type: 'string', maxLength: 1000 }, populationMesh: { type: 'string', maxLength: 200 }, interventionMesh: { type: 'string', maxLength: 200 }, includeOutcome: { type: 'boolean' }, outcome: { type: 'string', maxLength: 1000 } }, required: ['population'], additionalProperties: false }, annotations: { readOnlyHint: false, untrustedContentHint: false }, execute: stageSearch }, { signal: lifecycle.signal })).catch(() => {}); } catch (_) {} };
   register(); window.addEventListener('pagehide', event => { if (!event.persisted) lifecycle.abort(); });
