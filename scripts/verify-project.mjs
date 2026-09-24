@@ -68,6 +68,21 @@ for (const secret of [
 for (const step of ['apksigner verify', 'sha256sum', 'assembleRelease', 'if: always()', 'EXPECTED_SIGNER_SHA256']) {
   assert.ok(release.includes(step), `missing release step: ${step}`);
 }
+assert.match(
+  release,
+  /workflow_dispatch:\s*\n\s*inputs:\s*\n\s*publish:/,
+  'manual release workflow must offer an explicit publish switch'
+);
+assert.match(
+  release,
+  /if:\s*startsWith\(github\.ref, 'refs\/tags\/v'\) \|\| inputs\.publish/,
+  'GitHub Release publishing must require a version tag or the explicit publish switch'
+);
+assert.match(
+  release,
+  /gh release create v1\.0\.0[\s\S]*?--target "\$GITHUB_SHA"/,
+  'manual publishing must create v1.0.0 from the verified commit'
+);
 assert.doesNotMatch(
   release,
   /^ {6}ANDROID_KEYSTORE_PATH:\s*\$\{\{\s*runner\.temp\s*\}\}/m,
