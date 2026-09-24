@@ -20,4 +20,14 @@ const manifest = readFileSync('app/src/main/AndroidManifest.xml', 'utf8');
 for (const permission of ['CAMERA','RECORD_AUDIO','ACCESS_FINE_LOCATION','READ_CONTACTS','READ_SMS','READ_EXTERNAL_STORAGE']) {
   assert.ok(!manifest.includes(permission), `forbidden permission: ${permission}`);
 }
+
+const workflow = readFileSync('.github/workflows/android-verify.yml', 'utf8');
+for (const command of [
+  'node scripts/verify-project.mjs',
+  'node scripts/verify-web-assets.mjs',
+  'bash scripts/check-no-secrets.sh',
+  './gradlew testDebugUnitTest lintDebug assembleDebug'
+]) {
+  assert.ok(workflow.includes(command), `missing CI command: ${command}`);
+}
 console.log('project structure OK');
