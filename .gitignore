@@ -3,5 +3,9 @@
 build/
 **/build/
 local.properties
+*.jks
+*.keystore
+keystore.properties
+.signing/
 *.iml
 .idea/
